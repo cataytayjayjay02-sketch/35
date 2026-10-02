@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A little invitation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#1d0f2a;--plum:#3a1d4d;--rose:#e8607a;--butter:#f6c667;--blush:#fde7ee;--ink:#2a1633;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:inherit}
+[hidden]{display:none!important}
+body{margin:0;min-height:100vh;background:radial-gradient(120% 80% at 50% 0%,var(--plum),var(--night));color:var(--blush);font:17px/1.6 Nunito,system-ui,sans-serif;overflow-x:hidden}
+.hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.hearts i{position:absolute;bottom:-40px;color:var(--rose);opacity:.0;animation:rise linear infinite;font-style:normal}
+@keyframes rise{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:.5}100%{transform:translateY(-110vh) rotate(40deg);opacity:0}}
+main{position:relative;max-width:560px;margin:0 auto;padding:28px 20px 60px}
+section{display:none}
+section.on{display:block;animation:in .6s ease both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.2;margin:0 0 .5em}
+h1{font-size:2rem;text-align:center}
+h2{font-size:1.6rem}
+.muted{opacity:.75}
+/* envelope */
+.stage{display:grid;place-items:center;min-height:70vh;text-align:center}
+.env{position:relative;width:280px;height:190px;margin:30px auto;cursor:pointer;background:var(--rose);border-radius:8px;box-shadow:0 20px 50px #0008;animation:bob 3s ease-in-out infinite}
+.env .flap{position:absolute;inset:0 0 auto 0;height:100px;background:#d24d68;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s ease;z-index:3}
+.env .card{position:absolute;left:14px;right:14px;top:10px;bottom:10px;background:var(--blush);border-radius:4px;color:var(--ink);display:grid;place-items:center;font:italic 1.3rem Fraunces,serif;transition:transform .9s ease .5s;z-index:1}
+.env::after{content:"";position:absolute;inset:0;background:var(--rose);clip-path:polygon(0 100%,0 35%,50% 62%,100% 35%,100% 100%);border-radius:8px;z-index:2}
+.env.open{animation:none}
+.env.open .flap{transform:rotateX(180deg);z-index:0}
+.env.open .card{transform:translateY(-120px) scale(1.1)}
+@keyframes bob{50%{transform:translateY(-8px)}}
+/* letter */
+.letter{background:var(--blush);color:var(--ink);border-radius:14px;padding:26px 22px;box-shadow:0 20px 50px #0007;font-family:Fraunces,Georgia,serif;font-size:1.05rem;line-height:1.75}
+.letter p{margin:0 0 1em;opacity:0;animation:in .9s ease forwards}
+.letter .sign{text-align:right;font-style:italic;color:#b83a58}
+/* choices */
+.opts{display:grid;gap:12px;margin:18px 0}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;padding:14px 16px;border:2px solid #ffffff30;border-radius:14px;transition:.2s}
+.opt:hover,.opt:focus-visible{border-color:var(--butter)}
+.opt[aria-pressed=true]{border-color:var(--rose);background:#e8607a26;transform:scale(1.02)}
+.opt b{display:block;font-family:Fraunces,serif;font-size:1.15rem}
+.opt span{opacity:.75;font-size:.95rem}
+input{width:100%;padding:12px 14px;border-radius:12px;border:2px solid #ffffff30;background:#ffffff12;color:inherit;font:inherit;margin-top:8px}
+input:focus-visible{outline:2px solid var(--butter)}
+label{display:block;margin-top:14px}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;margin-top:20px;padding:14px;border-radius:999px;background:var(--rose);color:#fff;font-weight:700;transition:.2s}
+.btn:hover,.btn:focus-visible{background:#f0728b;transform:translateY(-2px)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.btn.alt{background:transparent;border:2px solid var(--butter);color:var(--butter)}
+.sum{background:#ffffff14;border-radius:14px;padding:16px;margin:16px 0;white-space:pre-line}
+.big{font-size:3rem;text-align:center;animation:pop 1.2s ease infinite}
+@keyframes pop{50%{transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.letter p{opacity:1}}
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+<main>
+
+<section id="s0" class="on stage">
+  <div>
+    <h1 id="hello"></h1>
+    <p class="muted">Someone left you something. Tap to open.</p>
+    <div class="env" id="env" role="button" tabindex="0" aria-label="Open the envelope"><div class="flap"></div><div class="card">For you</div></div>
+  </div>
+</section>
+
+<section id="s1">
+  <div class="letter" id="letter"></div>
+  <button class="btn" id="toCafe">Continue ♥</button>
+</section>
+
+<section id="s2">
+  <h2>Where should we go?</h2>
+  <p class="muted">You choose the cafe. I'll be there early.</p>
+  <div class="opts" id="cafes"></div>
+  <button class="btn" id="toWho" disabled>Next</button>
+</section>
+
+<section id="s3">
+  <h2>Just the two of us?</h2>
+  <p class="muted">Either way is okay with me.</p>
+  <div class="opts">
+    <button class="opt" data-who="duo" aria-pressed="false"><b>Just us two</b><span>Walang istorbo.</span></button>
+    <button class="opt" data-who="trio" aria-pressed="false"><b>Jayden</b><span>Isa lang ang kasama.</span></button>
+  </div>
+  <button class="btn" id="toWhen" disabled>Next</button>
+</section>
+
+<section id="s4">
+  <h2>When are you free?</h2>
+  <label>Day <input type="date" id="day"></label>
+  <label>Time <input type="time" id="time" value="15:00"></label>
+  <button class="btn" id="finish">Yes, it's a date</button>
+</section>
+
+<section id="s5">
+  <div class="big" aria-hidden="true">♥</div>
+  <h2 style="text-align:center">You said yes.</h2>
+  <p class="muted" style="text-align:center">Here's what I'll reserve for us.</p>
+  <div class="sum" id="sum"></div>
+  <p id="status" class="muted" style="text-align:center" role="status"></p>
+  <a class="btn" id="sms" hidden>Send my answer</a>
+  <button class="btn alt" id="copy">Copy my answer</button>
+</section>
+
+</main>
+<script>
+/* ===== EDIT THESE ===== */
+const CFG = {
+  her: "Lovey",            // her name or nickname
+  you: "Jj",               // your name
+  sms: "",                 // optional backup: your number, e.g. "+639171234567"
+  endpoint: "",            // server URL that receives her answer, e.g. "https://api.web3forms.com/submit"
+  extra: {},               // extra fields the server needs, e.g. {access_key:"YOUR_KEY"} for Web3Forms
+  cafes: [
+    {n:"Bonsai", d:""},
+    {n:"Veranda", d:""},
+    {n:"Kapetonio", d:""},
+    {n:"Ikaw na bahala", d:"You surprise me. I trust your taste."}
+  ]
+};
+const msg = [
+  `Happy monthsary, loveyy ♥`,
+  `Isa nalang, anniversary na! Salamat sa lahattt ng sacrifice, love, at pag-intindi. Hindi ako perfect na boyfriend, pero pipilitin ko, time by time hehe.`,
+  `Sorry lovey dahil may mga time na nababadtrip kita. Promise, mag-iimprove ako palagiii.`,
+  `Mag-tatatlong taon na tayo, hehe. Ang bilis ng time! Sana matupad natin ang mga dreams natin, at matutupad natin yan nang magkasama.`,
+  `Kahit isang bilyon beses ka pang magalit, bumato, bumahog, at mabadtrip, one hundred billion dollar dollar kitang susuyuin.`,
+  `<span class="sign">- ${CFG.you}</span>`
+];
+/* ====================== */
+const $ = s => document.querySelector(s);
+const st = {cafe:null, who:null};
+$('#hello').textContent = `Hi ${CFG.her}, I have something for you`;
+
+// floating hearts
+const H = $('#hearts');
+for (let i=0;i<14;i++){
+  const e=document.createElement('i'); e.textContent='♥';
+  e.style.cssText=`left:${Math.random()*100}%;font-size:${12+Math.random()*22}px;animation-duration:${8+Math.random()*10}s;animation-delay:${Math.random()*10}s`;
+  H.appendChild(e);
+}
+
+function go(n){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));
+  $('#s'+n).classList.add('on'); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// envelope -> letter
+function openEnv(){
+  const env=$('#env'); if(env.classList.contains('open')) return;
+  env.classList.add('open');
+  setTimeout(()=>{
+    $('#letter').innerHTML = msg.map((t,i)=>`<p style="animation-delay:${i*1.1}s">${t}</p>`).join('');
+    go(1);
+  },2000);
+}
+$('#env').onclick=openEnv;
+$('#env').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openEnv()}};
+$('#toCafe').onclick=()=>go(2);
+
+// cafes
+CFG.cafes.forEach((c,i)=>{
+  const b=document.createElement('button'); b.className='opt'; b.setAttribute('aria-pressed','false');
+  b.innerHTML=`<b>${c.n}</b><span>${c.d}</span>`;
+  b.onclick=()=>{st.cafe=c.n;document.querySelectorAll('#cafes .opt').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');$('#toWho').disabled=false};
+  $('#cafes').appendChild(b);
+});
+$('#toWho').onclick=()=>go(3);
+
+// company
+document.querySelectorAll('[data-who]').forEach(b=>b.onclick=()=>{
+  st.who=b.dataset.who;
+  document.querySelectorAll('[data-who]').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  $('#toWhen').disabled=false;
+});
+$('#toWhen').onclick=()=>go(4);
+
+// date
+const d=new Date(); d.setDate(d.getDate()+1);
+$('#day').value=d.toISOString().slice(0,10); $('#day').min=new Date().toISOString().slice(0,10);
+
+function answer(){
+  const who = st.who==='trio' ? 'With: me and Jayden' : 'With: just the two of us';
+  const day=new Date($('#day').value+'T00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  return `Yes, ${CFG.you}! ♥\nCafe: ${st.cafe}\n${who}\nWhen: ${day}, ${$('#time').value}`;
+}
+async function submit(a){
+  if(!CFG.endpoint) return null;
+  try{
+    const r=await fetch(CFG.endpoint,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({...CFG.extra,subject:`${CFG.her} said yes ♥`,name:CFG.her,message:a})});
+    return r.ok;
+  }catch(e){return false}
+}
+let sending=false;
+$('#finish').onclick=async()=>{
+  if(sending) return; sending=true;
+  const a=answer(); $('#sum').textContent=a;
+  const showBackup=()=>{
+    $('#copy').hidden=false;
+    if(CFG.sms){const l=$('#sms');l.hidden=false;l.href=`sms:${CFG.sms}?&body=${encodeURIComponent(a)}`}
+  };
+  $('#copy').hidden=true;
+  go(5);
+  const ok=await submit(a);
+  if(ok===true) $('#status').textContent=`Sent! ${CFG.you} got your answer.`;
+  else if(ok===false){$('#status').textContent="It didn't go through. Please send it with the buttons below.";showBackup()}
+  else showBackup();
+  for(let i=0;i<30;i++){const e=document.createElement('i');e.textContent='♥';e.style.cssText=`left:${Math.random()*100}%;font-size:${16+Math.random()*28}px;animation-duration:${3+Math.random()*4}s;animation-delay:${Math.random()*1.5}s`;H.appendChild(e)}
+};
+$('#copy').onclick=async()=>{
+  try{await navigator.clipboard.writeText(answer());$('#copy').textContent='Copied. Paste it in our chat.'}
+  catch(e){$('#copy').textContent='Select the text above and copy it'}
+};
+</script>
+</body>
+</html>
